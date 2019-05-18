@@ -1,0 +1,193 @@
+<% include ../partials/header %> 
+
+<div class="container mb-3">
+  <div class="row mt-3">
+      <div class="col-md-3 mb-3">
+        <div class="sticky-element">
+          <p class="lead">Yelp Camp </p>
+          <div class="list-group text-center">
+             <li class="list-group-item"><a href="/campgrounds/<%=campgrounds._id%>/next">Next Campground<i class="ml-2 angle double right icon"></i></a></li>
+          <li class="list-group-item"><s><p href="#"><i class="angle double left icon"></i>Previous Campground</p></s></li>
+          <li class="list-group-item mb-3"><a class="ancers" href="/campgrounds"><i class="arrow alternate left circle outline icon"></i>Back to campgrounds</a></li>
+
+          </div>
+         
+          
+            
+          <div id="map" class="mb-5"></div>
+        </div>
+          
+      </div>
+      <div class="col-md-9">
+        <%if(error && (error.length >0)){%>
+            <div class="alert alert-danger faster bounce"><%= error %></div>
+        <%}else if(success && (success.length >0)){%>
+            <div class="alert alert-success faster bounce"><%= success %></div>
+        <%}%>
+          <div class="ui segment padded px-0 pt-0 mb-0">
+              <img class="ui image rounded fluid" src="<%= campgrounds.image%>" alt="focusedimage">
+              <div class="px-4">
+                 <h4 class="float-right">US$ <%=campgrounds.price%>/night</h4>
+                 <h4 style="text-transform:uppercase;color: #1a69a4;"><%=campgrounds.name %></h4>
+                 <p class="ui segment fluid bg-light" style="word-break:break-word; white-space:normal;"><%= campgrounds.description  %></p>
+               
+                 <p class="float-right"><strong>Submitted by: </strong><em> <%= campgrounds.author.username%> </em></p>
+                 <p><strong>Date: </strong><em><%= moment(campgrounds.created).fromNow()%></em></p>
+               
+                    <div class="inline">
+                      <%# Authentication %> 
+                      <%if(currentUser && campgrounds.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin){%>   
+                          <form action="/campgrounds/<%=campgrounds._id%>?_method=DELETE" method="POST">
+                              <button class="ui red button small float-right" type="submit">DELETE</button>
+                          </form>
+                          <a class="ui yellow button small" href="/campgrounds/<%=campgrounds._id%>/edit">EDIT</a>
+                      <%}%>
+                    </div>
+                     
+              </div>
+          </div>
+          <div class="ui segment padded bg-light mt-0 mb-3">
+              <h3 id="comments" class="ui dividing header"><strong>Comments<a class= "ui blue animated button small float-right" role="button" data-toggle="collapse" href="#collapseComment" aria-expanded="false" aria-controls="collapseComment"><div class="visible content">Leave a review!</div><div class="hidden content"><i class="hand point down outline icon"></i></div></a></strong>
+              </h3>
+              
+              
+              <%# Collapse Add a comment form START %>
+              <div class="collapse animated pulse delay-0s" id="collapseComment">
+                <div class="well" style="border-left: 5px solid #2185d0;">
+
+                 
+                  <div class="indentation mb-3">
+                    
+                  
+                    <% if(!currentUser) { %>
+                      <h5>You need to be logged in before you can comment. <a href="/register">Click here</a> to go to the login page.</h5>
+                    <% } %>
+
+                    <% if(currentUser) { %>
+                      <h4>Write your comment <i class="ml-2 comment alternate icon" aria-hidden="true"></i></h4>
+                      <form id="add-comment-form" action="/campgrounds/<%= campgrounds._id %>/comments" method="POST">
+                          
+                          <div class="ui segment compact tertiary mb-0"><%= currentUser.username %></div>
+                          
+                          <div class="form-group">
+                            <textarea class="form-control mt-1 bg-white" name="comment[text]" placeholder="Write your comment. . ." form="add-comment-form" rows="5" cols="15"></textarea>
+                          </div>
+                          <div class="form-group">
+                            <button type="submit" class="ui button blue small">Comment</button>
+                          </div>
+                      </form>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              <%# Collapse Add a comment form END %>
+
+              
+
+              <%#Check if there are comments, if there are none say no comments.%>
+              <% if (campgrounds.comments.length === 0) { %>
+                <em style="color: grey;">No comments yet</em>
+              <% } %>
+
+                <%# Display comments by looping through them %>
+                <% campgrounds.comments.forEach(function(comment) { %>
+                <div class="row mb-2">
+                  <div class="col-md-12">
+                    <strong>
+                      <% if (currentUser && currentUser._id.equals(comment.author.id)) { %>
+
+                      <%# If the current user owns the comment, change the color of the user icon %>
+                      <i style="color: #1a69a4;" class="user icon" aria-hidden="true"></i>
+
+                      <% } else { %>
+
+                      <%# Else just display it black %>
+                        <i class="user icon" aria-hidden="true"></i>
+                      <% } %>
+                    
+                      <%# Print out the author username %>
+                      <%= comment.author.username %>
+                    
+
+                      <%#Show when the comment was made%>
+                      <span class="float-right"><%= moment(comment.createdAt).fromNow() %></span>
+                    </strong>
+
+                    <%#Printing the comment%>
+                    <p class="ml-4 ui segment" style="word-break:break-word; white-space:normal;"><%= comment.text %></p>
+
+                    <%# If the owner of the comment is logged in, show the edit and delete buttons %>
+                    <% if (currentUser && currentUser._id.equals(comment.author.id) || currentUser && currentUser.isAdmin) { %>
+                    <%# Edit button used for collapsing the edit comment form %>
+                    <a class="ui yellow button small ml-4" role="button" data-toggle="collapse" href="#collapseEdit<%= comment._id %>" aria-expanded="false" aria-controls="collapse<%= comment._id %>">Edit</a>
+
+                    <%# Delete comment button%>
+                    <form id="delete-form" action="/campgrounds/<%= campgrounds._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display: inline;">
+                      <button type="submit" class="ui red button small float-right">Delete</button>
+                    </form>
+
+                    <!--Edit comment form-->
+                    <div class="collapse animated pulse delay-0s" id="collapseEdit<%= comment._id %>">
+                      <div class="well" style="border-left: 5px solid #fbbd08; margin-top: 15px;">
+                        <div class="indentation mb-3">
+                          <h4>Edit comment <i class="ml-2 comment alternate icon" aria-hidden="true"></i></h4>
+
+                          <form id="edit-comment-form<%= comment._id %>" action="/campgrounds/<%= campgrounds._id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+                            <div class="ui segment compact tertiary mb-0"><%= currentUser.username %></div>
+                            <div class="form-group">
+                              <textarea class="form-control mt-1 bg-white" name="comment[text]" placeholder="Your comment text. . . " form="edit-comment-form<%= comment._id %>" rows="5" cols="15"><%= comment.text %></textarea>
+                            </div>
+                            <div class="form-group">
+                              <button class="ui yellow button small">Update comment</button>
+                            </div>
+                          </form>
+
+                        </div>
+                        
+                      </div>
+                    </div>
+                      <% } %>
+                    <hr>
+                  </div>
+                </div>
+                  <% }) %>
+              </div>
+              <!--COMMENT SECTION END-->
+      </div>
+  </div>
+</div>
+
+
+<%# Google Maps API %> 
+<script>
+  function initMap() {
+   
+    var lat = <%= campgrounds.lat %>;
+    var lng = <%= campgrounds.lng %>;
+    var center = {lat: lat, lng: lng };
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 8,
+        center: center,
+        scrollwheel: false
+    });
+    var contentString = `
+      <strong><%= campgrounds.name %><br />
+      <%= campgrounds.location %></strong>
+      <p><%= campgrounds.description %></p>
+    `
+    var infowindow = new google.maps.InfoWindow({
+      content: contentString
+    });
+    var marker = new google.maps.Marker({
+        position: center,
+        map: map
+    });
+    marker.addListener('click', function() {
+      infowindow.open(map, marker);
+    });
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7_9yAYkVF-0nJwxcC1VNkPGarn_-VCGs&callback=initMap"></script>
+
+
+<% include ../partials/footer %> 

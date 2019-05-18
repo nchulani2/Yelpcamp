@@ -1,0 +1,130 @@
+<% include ../partials/header %> 
+
+    
+<div class="container">
+    <%if(error && (error.length > 0)){%>
+        <div class="my-2 alert alert-danger faster bounce"> <%=error%></div>
+    <%} else if(success && (success.length > 0)){%>
+        <div class="my-2 alert alert-success faster bounce"> <%=success%></div>
+    <%} %>
+</div>
+
+    <%# Landing %> 
+<div class="container-fluid">
+     <div id="landing-header" class="text-light animated bounceInLeft delay-0s">
+ 		<h1 class="display-3 welcome">Welcome!</h1>
+		<% if(currentUser){%>
+            <a class= "ui blue animated button big mb-2" href="/campgrounds/new"><div class="visible content">Create a camp now!</div><div class="hidden content"><i class="arrow alternate circle right icon"></i></div></a>
+            <div class="container">
+                 <form action="/campgrounds" method="GET">
+                        <div class="form-group indform">
+                            <input class="form-control searchinp mb-3" style="height:100%;" type="text" name="search" placeholder="Search for a camp. . .">
+                        </div>
+                </form>
+            </div>
+                
+        <%} else{%>
+            
+            <h2> Create your campground by <a class="ancers d-inline" href="/register">Signing up!</a> </h2>  
+             <div class="container">
+                 <form action="/campgrounds" method="GET">
+                        <div class="form-group indform">
+                            <input class="form-control searchinp mb-3" style="height:100%;" type="text" name="search" placeholder="Search for a camp. . .">
+                        </div>
+                </form>
+            </div>
+        <%}%>
+    </div>
+    
+    <ul class="slideshow bg-dark">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+</div>
+   
+
+<div class="container marg">
+        <div class="ui three stackable special cards">
+            <div class="gridmason mx-auto">        
+                <%# Setting up the grid of the campgrounds %>             
+                <% campgrounds.forEach(function(camp){ %>
+                    <div class="grid-item">
+                        <div class="ui fluid card animated fadeInUp delay-0s">
+                            <div class="blurring dimmable image">
+                                <div class="ui dimmer">
+                                    <div class="content">
+                                        <div class="center">
+                                            <a href="/campgrounds/<%=camp._id%>" class="ui primary button">See more!</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img src="<%= camp.image %>" alt="camp#">
+                            </div>
+                            <div class="content left aligned">
+                                <div class="header">
+                                    <h5 class="card-title text-dark m-0"> <%= camp.name %> </h5>
+                                </div>
+                                
+                                <div class="meta float-right"><i class="user icon"></i> <%= camp.author.username %> </div>
+                                <div class="meta mb-3"><%= moment(camp.created).fromNow() %>  </div>
+                                <div class="description text-center"> <%=camp.description.substring(0,50) %>. . .</div>
+                            </div>
+                            <a class="ui bottom attached primary button text-light" href="/campgrounds/<%=camp._id%>"><i class="fire icon"></i></a>
+                        </div>   
+                    </div>             
+                <% }) %> 
+            </div>
+        </div>
+        <nav aria-label="Page navigation">
+        <% if (pages && pages > 0) { %>
+        <ul class="pagination justify-content-center mt-5">
+            <% if (current == 1) { %>
+                <li class="page-item disabled"><a class="page-link">First</a></li>
+            <% } else { %>
+                <li><a class="page-link" href="/campgrounds">First</a></li>
+            <% } %>
+
+            <% if (current == 1) { %>
+                <li class="page-item disabled"><a class="page-link">«</a></li>
+            <% } else { %>
+                <li><a class="page-link" href="/campgrounds?page=<%= Number(current) - 1 %>">«</a></li>
+            <% } %>
+            
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="page-item disabled"><a class="page-link">...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 4) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <li class="page-item active"><a class="page-link"><%= i %></a></li>
+                <% } else { %>
+                    <li><a class="page-link" href="/campgrounds?page=<%= i %>"><%= i %></a></li>
+                <% } %>
+                <% if (i == Number(current) + 4 && i < pages) { %>
+                    <li class="page-item disabled"><a class="page-link">...</a></li>
+                <% } %>
+            <% } %>
+                    
+            <% if (current == pages) { %>
+                <li class="page-item disabled"><a class="page-link">»</a></li>
+            <% } else { %>
+                <li><a class="page-link" href="/campgrounds?page=<%= Number(current) + 1 %>">»</a></li>
+            <% } %>
+            
+            <% if (current == pages) { %>
+                <li class="page-item disabled"><a class="page-link">Last</a></li>
+            <% } else { %>
+                <li><a class="page-link" href="/campgrounds?page=<%= pages %>">Last</a></li>
+            <% } %>
+        </ul>
+        <% } %>
+    </nav>
+   
+ 
+</div>
+
+<% include ../partials/footer %> 
+

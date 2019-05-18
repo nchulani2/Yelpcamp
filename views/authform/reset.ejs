@@ -1,0 +1,33 @@
+<% include ../partials/header %> 
+
+<div class="container">
+
+    <% if(error && (error.length > 0)){%>
+        <div class="my-2 alert alert-danger faster bounce"> <%=error%></div>
+    <%} %>
+
+     
+  
+    <div id="forgotform" class="ui segment padded fluid animated bounceInRight delay-0s text-center">
+        <h1>Update Password</h1>
+            <p>Enter a new password</p>
+            <form action="/reset/<%=token%>" method="POST" class="needs-validation" novalidate>
+                <div class="form-row">
+                    <div class="col-md-12 mb-2">
+                        <input type="password" class="form-control forgot" id="validationCustom01" placeholder="New Password" name="password" pattern="(?=.*\d)(?=.*[a-z]).{5,}" required>
+                        <div class="invalid-feedback">
+                            Password must be at least 5 characters long and contain at least one number.
+                        </div>
+                    </div>
+                     <div class="col-md-12 mb-2">
+                        <input type="password" class="form-control forgot" id="validationCustom01" placeholder="Confirm Password" name="confirm" pattern="(?=.*\d)(?=.*[a-z]).{5,}" required>
+                    </div>
+                    
+                    
+                </div>
+                <button class="mb-3 butt" type="submit">UPDATE</button>
+            </form>
+    </div>
+</div>
+
+<% include ../partials/footer %> 

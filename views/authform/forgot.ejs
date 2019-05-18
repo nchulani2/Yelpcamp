@@ -1,0 +1,32 @@
+<% include ../partials/header%>
+
+<div class="container">
+
+    <% if(error && (error.length > 0)){%>
+        <div class="my-2 alert alert-danger faster bounce"> <%=error%></div>
+    <%} else if(success && (success.length > 0)){ %>
+        <div class="my-2 alert alert-success faster bounce"> <%=success%></div>
+    <%} %> %>
+
+     
+  
+    <div id="forgotform" class="ui segment padded fluid animated bounceInRight delay-0s text-center">
+        <h1>Forgot Password</h1>
+            <p>Enter the email address associated with your account</p>
+            <form action="/register/forgot" method="POST" class="needs-validation" novalidate>
+                <div class="form-row">
+                    <div class="col-md-12 mb-2">
+                        <input type="email" class="form-control forgot" id="validationCustom01" placeholder="Email" name="email" required>
+                        <div class="invalid-feedback mb-2">
+                            Enter a valid email address
+                        </div> 
+                    </div>
+                    
+                    
+                </div>
+                <button class="mb-3 butt" type="submit">RESET</button>
+                <a class="ancers" href="/register"><i class="arrow alternate circle left icon"></i>Go back</a>
+            </form>
+    </div>
+</div>
+<% include ../partials/footer %> 

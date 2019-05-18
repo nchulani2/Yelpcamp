@@ -1,0 +1,145 @@
+   <!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>YelpCamp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+   <%# Bootstrap %>
+  <link rel="stylesheet" type="text/css"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <%# Semantic %>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+  <link rel="stylesheet" type="text/css" media="screen" href="/style/register.css">
+
+</head>
+
+<body>
+
+  <nav id="mainnav" class="navbar navbar-expand-md navbar-light">
+    <a class="navbar-brand ml-3" href="/"> <i class="fas fa-campground"> </i> </a>
+    <button class="navbar-toggler navig border-white" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span><i class="bars icon text-light"></i></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/campgrounds">Campgrounds</a>
+        </li>
+        <%if(currentUser){%>
+        <li class="nav-item">
+          <a class="nav-link" href="/campgrounds/new">New</a>
+        </li>
+        <%}%>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+       <%  if(!currentUser){ %> 
+          <li class="nav-item">
+            <a class="nav-link" href="/register">Sign Up</a>
+          </li>
+       <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link disabled">Welcome, <%= currentUser.username %></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>    
+      <% } %>
+      </ul>
+    </div>
+  </nav>
+
+<%# REGISTER STARTS HERE %>
+<section class="signupbody animated bounceInRight delay-0s">
+ <% if(similar && (similar.length >0)){ %>   
+    <div class="text-center alert alert-danger bounce" role="alert" ><%=similar %></div>
+  <% } else if(error && (error.length >0)){ %>   
+    <div class="text-center alert alert-danger bounce" role="alert"><%= error %></div>
+  <% } %>
+    <div class="containment" id="container">
+      <%# REGISTER %> 
+        <div class="form-container sign-up-container">
+            <form action="/register" method=POST>
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="/auth/facebook" class="ui facebook button mx-2 my-2 disabledClick"><i class="facebook icon"></i>Facebook</a>
+                    <a href="/auth/google" class="ui google plus button mx-2 my-2 disabledClick"><i class="google plus icon"></i>Google Plus</a>
+                </div>
+                
+
+                <div class="form-row">
+                  <div class="col-12 col-md-6">
+                      <input class="form-control" type="text" name="firstName" placeholder="First Name" maxlength="20" required />
+                  </div>
+                   <div class="col-12 col-md-6">
+                      <input class="form-control" type="text" name="lastName" placeholder="Last Name" maxlength="20" required />
+                   </div>
+                  
+                </div>
+                <div class="form-row">
+                  <div class="col-12 col-md-6">
+                    <input class="form-control" type="text" name="username" placeholder="Userame" maxlength="20" required  />
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <input class="form-control" type="password" name="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z]).{5,}" title="Password must be at least 5 characters long and contain at least one number." maxlength="30"required />
+                  </div>
+              
+                </div>
+                <div class="form-row">
+                  <div class="col-12">
+                    <input class="form-control" type="email" name="email" placeholder="Email" maxlength="50" required />
+                  </div>
+                </div>
+              
+                <div class="form-row">
+                  <div class="col-12">
+                    <input class="form-control admin mx-auto" type="password" name="adminCode" placeholder="Admin code" />
+                  </div>
+                </div>
+                <button type="submit" class="mt-2">Sign Up</button>
+               <div class="mt-3"><a class="ancers" href="/campgrounds"><i class="arrow alternate circle left icon"></i>Go back</a></div>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+         <%# LOGIN %> 
+            <form action="/login" method= POST>
+                <h1>Login</h1>
+                
+                <div class="ui segment compact bg-light">
+                  <p>Welcome back! Sign in with your username and password</p>
+                </div>
+                <input class="form-control" type="text" name="username" placeholder="Userame" maxlength="20" required />
+                <input class="form-control" type="password" name="password" placeholder="Password" maxlength="20" required />
+                <button type="submit" class="mt-2">Login</button>
+               <div class="mt-3"><a class="ancers" href="/campgrounds"><i class="arrow alternate circle left icon"></i>Go back</a> or <a class="ancers" href="/register/forgot">Forgot password? </a></div>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Please login with your username and password</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello!</h1>
+                    <p>Sign up now to create your first campground!</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+ 
+
+<% include ../partials/footer %> 
+
+                  
