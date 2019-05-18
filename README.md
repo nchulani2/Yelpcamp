@@ -3,6 +3,8 @@
 
 **Yelpcamp is a Node.js web application originally developed by Colt Steele on Udemy - [The Web Developer Bootcamp by Colt Steele](https://www.udemy.com/the-web-developer-bootcamp/)**
 
+**A running demo of the app can be found here at - [yelpcampport](https://yelpcampport.herokuapp.com/)
+
 ## Features
 
 * **Authentication**
