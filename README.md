@@ -1,5 +1,5 @@
 # Yelpcamp
-[![Known Vulnerabilities](https://snyk.io/test/github/nchulani2/yelpcamp/badge.svg)](https://snyk.io/test/github/nchulani2/yelpcamp)  CRUD based web app
+CRUD based web app
 
 **Yelpcamp is a Node.js web application originally developed by Colt Steele on Udemy - [The Web Developer Bootcamp by Colt Steele](https://www.udemy.com/the-web-developer-bootcamp/)**
 
